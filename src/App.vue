@@ -200,7 +200,10 @@ onUnmounted(() => {
             <span class="dept-tag">PROJECT TEAM</span>
             <h2>คณะผู้จัดทำ</h2>
           </div>
-          <span class="sub-info">แผนกวิชาเทคโนโลยีสารสนเทศ</span>
+          <span class="dept-badge">
+            <span class="dept-badge-dot"></span>
+            แผนกวิชาเทคโนโลยีสารสนเทศ
+          </span>
         </div>
 
         <div class="creators-grid">
@@ -469,10 +472,29 @@ h2 {
   padding: 0.38rem 0.75rem;
   border-radius: 999px;
 }
-.sub-info {
-  font-size: 0.86rem;
-  color: #78716c;
+
+/* ป้ายแผนกวิชาเด่นๆ */
+.dept-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #9a3412;
+  background: linear-gradient(135deg, #ffedd5 0%, #fed7aa 100%);
+  border: 1.5px solid #fb923c;
+  padding: 0.42rem 0.95rem;
+  border-radius: 999px;
+  box-shadow: 0 3px 10px rgba(234, 88, 12, 0.12);
 }
+.dept-badge-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #ea580c;
+  flex-shrink: 0;
+}
+
 .block-box {
   border: 1px solid #ffedd5;
   background: linear-gradient(180deg, #fffaf5 0%, #ffffff 100%);
