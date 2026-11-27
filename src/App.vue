@@ -13,6 +13,7 @@ const creators = [
 const logs = ref([])
 const loading = ref(false)
 const statusText = ref('')
+const lastFetchedTime = ref('-')
 let pollTimer = null
 let isFetching = false
 
@@ -26,6 +27,16 @@ function formatThaiDate(val) {
     year: 'numeric',
     month: '2-digit',
     day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit'
+  })
+}
+
+// เวลาไทยแบบ HH:mm:ss สำหรับแสดงตอนที่ดึงข้อมูลล่าสุด
+function formatThaiTimeOnly(dateObj = new Date()) {
+  return dateObj.toLocaleTimeString('th-TH', {
+    timeZone: 'Asia/Bangkok',
     hour: '2-digit',
     minute: '2-digit',
     second: '2-digit'
@@ -130,6 +141,7 @@ async function loadLogs(manual = false) {
     const data = await res.json()
     if (data.status === 'ok') {
       logs.value = data.data
+      lastFetchedTime.value = formatThaiTimeOnly(new Date())
       statusText.value = ''
     }
   } catch (err) {
@@ -207,7 +219,7 @@ onUnmounted(() => {
             <h2>Sonar &amp; Fan Monitor</h2>
           </div>
           <div class="update-pill">
-            อัปเดตล่าสุด: <strong>{{ formatThaiDate(latest.Date) }}</strong>
+            ข้อมูลล่าสุด: <strong>{{ formatThaiDate(latest.Date) }}</strong>
           </div>
         </div>
 
@@ -269,6 +281,12 @@ onUnmounted(() => {
             </svg>
           </div>
           <p v-else class="empty-text">ยังไม่มีข้อมูลกราฟ</p>
+
+          <!-- แถบบอกเวลาใต้กราฟ ว่าดึงตอนกี่โมง -->
+          <div class="chart-footer">
+            <span>ดึงข้อมูลล่าสุดเมื่อ: <strong>{{ lastFetchedTime }} น.</strong> (ทุก 1 วินาที)</span>
+            <span>เวลาข้อมูลในชีต: <strong>{{ formatThaiDate(latest.Date) }}</strong></span>
+          </div>
         </div>
 
         <!-- 2. เกจครึ่งวงกลม + การ์ด Distance & Grade -->
@@ -490,6 +508,21 @@ h2 {
   width: 100%;
   height: auto;
   display: block;
+}
+.chart-footer {
+  margin-top: 0.7rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed #fed7aa;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  color: #78716c;
+}
+.chart-footer strong {
+  color: #9a3412;
 }
 .gauge-section {
   display: grid;
