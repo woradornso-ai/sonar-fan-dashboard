@@ -330,43 +330,6 @@ onUnmounted(() => {
           </div>
         </div>
       </section>
-
-      <!-- 3. ส่วน DB Sheet ด้านล่าง -->
-      <section class="db-panel">
-        <div class="panel-top">
-          <div class="title-group">
-            <span class="dept-tag">GOOGLE SHEETS DATABASE</span>
-            <h2>DB Sheet</h2>
-          </div>
-          <span class="count-badge">{{ logs.length }} รายการ</span>
-        </div>
-
-        <div class="table-wrap">
-          <table class="db-table">
-            <thead>
-              <tr>
-                <th>วันที่ / เวลา</th>
-                <th>ระยะทาง (cm)</th>
-                <th>Grade</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="(row, idx) in [...logs].reverse()" :key="idx">
-                <td>{{ formatThaiDate(row.Date) }}</td>
-                <td><strong class="dist-cell">{{ row.Distance }}</strong></td>
-                <td>
-                  <span class="grade-chip sm" :class="'grade-' + getGrade(row.Distance).toLowerCase()">
-                    {{ getGrade(row.Distance) }}
-                  </span>
-                </td>
-              </tr>
-              <tr v-if="logs.length === 0">
-                <td colspan="3" class="empty-text">ยังไม่มีข้อมูลในชีต</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </section>
     </div>
   </div>
 </template>
@@ -463,7 +426,6 @@ h2 {
   color: #1c1917;
 }
 .main-panel,
-.db-panel,
 .creators-panel {
   background: #ffffff;
   border: 1px solid #fed7aa;
@@ -487,14 +449,6 @@ h2 {
   background: #fff7ed;
   border: 1px solid #fed7aa;
   padding: 0.38rem 0.75rem;
-  border-radius: 999px;
-}
-.count-badge {
-  font-size: 0.84rem;
-  font-weight: 700;
-  color: #c2410c;
-  background: #ffedd5;
-  padding: 0.35rem 0.75rem;
   border-radius: 999px;
 }
 .sub-info {
@@ -640,12 +594,6 @@ h2 {
   color: #9a3412;
   flex-shrink: 0;
 }
-.grade-chip.sm {
-  width: 28px;
-  height: 28px;
-  font-size: 0.85rem;
-  border-radius: 7px;
-}
 .grade-a {
   background: #dcfce7;
   color: #15803d;
@@ -703,38 +651,6 @@ h2 {
   margin: 0 0 1rem;
   color: #b91c1c;
   font-weight: 600;
-}
-.table-wrap {
-  overflow-x: auto;
-  border: 1px solid #ffedd5;
-  border-radius: 12px;
-}
-.db-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-.db-table th {
-  background: #fff7ed;
-  color: #9a3412;
-  font-size: 0.88rem;
-  font-weight: 700;
-  text-align: left;
-  padding: 0.78rem 0.95rem;
-  border-bottom: 2px solid #fed7aa;
-}
-.db-table td {
-  padding: 0.72rem 0.95rem;
-  border-bottom: 1px solid #ffedd5;
-  font-size: 0.92rem;
-}
-.db-table tbody tr:last-child td {
-  border-bottom: none;
-}
-.db-table tbody tr:hover {
-  background: #fffaf5;
-}
-.dist-cell {
-  color: #9a3412;
 }
 .empty-text {
   text-align: center;
