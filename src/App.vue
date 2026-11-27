@@ -14,6 +14,7 @@ const logs = ref([])
 const loading = ref(false)
 const statusText = ref('')
 let pollTimer = null
+let isFetching = false
 
 // แปลงเวลา ISO (.000Z) เป็นวันที่และเวลาไทย
 function formatThaiDate(val) {
@@ -119,25 +120,29 @@ const areaPoints = computed(() => {
   return `${first.x},${first.baselineY} ${polylinePoints.value} ${last.x},${first.baselineY}`
 })
 
-async function loadLogs() {
-  loading.value = true
-  statusText.value = ''
+async function loadLogs(manual = false) {
+  if (isFetching) return
+  isFetching = true
+  if (manual) loading.value = true
+
   try {
     const res = await fetch(API_URL)
     const data = await res.json()
     if (data.status === 'ok') {
       logs.value = data.data
+      statusText.value = ''
     }
   } catch (err) {
     statusText.value = 'ดึงข้อมูลไม่สำเร็จ: ' + err.message
   } finally {
-    loading.value = false
+    isFetching = false
+    if (manual) loading.value = false
   }
 }
 
 onMounted(() => {
-  loadLogs()
-  pollTimer = setInterval(loadLogs, 5000)
+  loadLogs(true)
+  pollTimer = setInterval(() => loadLogs(false), 1000)
 })
 
 onUnmounted(() => {
@@ -166,9 +171,9 @@ onUnmounted(() => {
           </div>
         </div>
 
-        <button type="button" class="btn-refresh" @click="loadLogs" :disabled="loading">
+        <button type="button" class="btn-refresh" @click="loadLogs(true)" :disabled="loading">
           <span class="refresh-dot"></span>
-          {{ loading ? 'กำลังโหลด...' : 'รีเฟรชข้อมูล' }}
+          {{ loading ? 'กำลังโหลด...' : 'รีเฟรชข้อมูล (1s)' }}
         </button>
       </div>
     </header>
@@ -687,6 +692,11 @@ h2 {
   height: 8px;
   border-radius: 999px;
   background: #22c55e;
+  animation: pulseDot 1s infinite;
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
 }
 
 .status-msg {
